@@ -134,7 +134,7 @@ GameObject:
   - component: {fileID: 173576738}
   - component: {fileID: 173576740}
   - component: {fileID: 173576739}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Gun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -171,7 +171,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _bulletPrefab: {fileID: 6031514986429336098, guid: 6cfa0ece868d5e5408aae132b95716a7, type: 3}
   _firingPoint: {fileID: 778695370}
-  _fireRate: 0.5
+  _fireRate: 0.2
 --- !u!212 &173576740
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -237,7 +237,7 @@ GameObject:
   - component: {fileID: 247798164}
   - component: {fileID: 247798165}
   - component: {fileID: 247798166}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Main Guy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -483,7 +483,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 778695370}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: FiringPoint
   m_TagString: Untagged
   m_Icon: {fileID: 3306451490063965843, guid: 0000000000000000d000000000000000, type: 0}
