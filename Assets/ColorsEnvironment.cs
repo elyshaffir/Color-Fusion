@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class EnvironmentColorGenerator : MonoBehaviour
+public class ColorsEnvironment : MonoBehaviour
 {
     public int width = 256;
     public int height = 256;
