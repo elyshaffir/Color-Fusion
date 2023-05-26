@@ -4,7 +4,7 @@ public class MainGuy : MonoBehaviour
 {
     public float jumpSpeed = 600;
     public float speed = 5;
-    public float viewHeight = 10; // todo can this be calculated
+    public float viewHeight; // todo can this be calculated
 
     // Gun variables
     [SerializeField] private GameObject _bulletPrefab;
@@ -17,6 +17,7 @@ public class MainGuy : MonoBehaviour
     void Start()
     {
         _myRidigbody = GetComponent<Rigidbody2D>();
+        viewHeight = Camera.main.orthographicSize;
     }
 
     void Update()
@@ -39,7 +40,7 @@ public class MainGuy : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D other)
     {
-        if(other.gameObject.CompareTag("Ground"))
+        if (other.gameObject.CompareTag("Ground"))
         {
             _isJumping = false;
         }
