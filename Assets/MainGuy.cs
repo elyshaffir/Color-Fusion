@@ -6,27 +6,32 @@ public class MainGuy : MonoBehaviour
     public float speed = 5;
     public float viewHeight = 10; // todo can this be calculated
 
-    private bool isJumping;
-    private Rigidbody2D myRidigbody;
+    // Gun variables
+    [SerializeField] private GameObject _bulletPrefab;
+    [Range(0.1f, 1f)]
+    [SerializeField] private float _fireRate = 0.5f;
+
+    private bool _isJumping;
+    private Rigidbody2D _myRidigbody;
 
     void Start()
     {
-        myRidigbody = GetComponent<Rigidbody2D>();
+        _myRidigbody = GetComponent<Rigidbody2D>();
     }
 
     void Update()
     {
         float move = Input.GetAxis("Horizontal");
 
-        myRidigbody.velocity = new Vector2(speed * move, myRidigbody.velocity.y);
+        _myRidigbody.velocity = new Vector2(speed * move, _myRidigbody.velocity.y);
 
-        if (Input.GetButtonDown("Jump") && !isJumping)
+        if (Input.GetButtonDown("Jump") && !_isJumping)
         {
-            myRidigbody.AddForce(new Vector2(myRidigbody.velocity.x, jumpSpeed));
+            _myRidigbody.AddForce(new Vector2(_myRidigbody.velocity.x, jumpSpeed));
         }
 
         // check if dead
-        if (myRidigbody.transform.position.y + viewHeight < Camera.main.transform.position.y)
+        if (_myRidigbody.transform.position.y + viewHeight < Camera.main.transform.position.y)
         {
             Debug.Log("out"); // todo handle death
         }
@@ -36,7 +41,7 @@ public class MainGuy : MonoBehaviour
     {
         if(other.gameObject.CompareTag("Ground"))
         {
-            isJumping = false;
+            _isJumping = false;
         }
     }
 
@@ -44,7 +49,7 @@ public class MainGuy : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Ground"))
         {
-            isJumping = true;
+            _isJumping = true;
         }
     }
 }
