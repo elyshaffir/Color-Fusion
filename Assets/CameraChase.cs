@@ -2,23 +2,14 @@ using UnityEngine;
 
 public class CameraChase : MonoBehaviour
 {
-    public float maxSpeed = 0.05f;
-    public ColorsEnvironment environment;
+    [SerializeField] private Transform _mainGuy;
 
-    private float _currentSpeed = 0.001f;
-
-    void FixedUpdate()
+    private void LateUpdate()
     {
-        Transform transform = GetComponent<Transform>();
-
-        _currentSpeed = Mathf.Min(_currentSpeed + 0.001f, maxSpeed);
-
-        transform.position = new Vector3(transform.position.x,
-            transform.position.y + _currentSpeed,
-            transform.position.z);
-
-        // todo why does /10 fixes speed of environment?
-        // maybe the scale of the quad?
-        environment.yOffset += _currentSpeed / 10.0f;
+        if (_mainGuy.position.y > transform.position.y)
+        {
+            Vector3 newPosition = new Vector3(transform.position.x, _mainGuy.position.y, transform.position.z);
+            transform.position = newPosition;
+        }
     }
 }
