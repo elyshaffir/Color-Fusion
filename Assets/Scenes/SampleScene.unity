@@ -472,7 +472,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d1be1645de8f08439caac62f6490e53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxSpeed: 0.01
+  maxSpeed: 0
   environment: {fileID: 1146037458}
 --- !u!1 &778695369
 GameObject:
@@ -861,4 +861,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 251a5fff20299f04d868fbde76835f52, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speed: 0.002
+  _speed: 0.2
+  _range: 2

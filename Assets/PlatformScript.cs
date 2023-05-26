@@ -19,8 +19,7 @@ public class PlatformScript : MonoBehaviour
 
         if (transform.position.y < _outY)
         {
-            Destroy(gameObject); // Even though the object is destroyed here...
-            Debug.Log(gameObject + " hasn't beed destroyed yet!"); // this won't cause an error!
+            Destroy(gameObject);
         }
     }
 }
