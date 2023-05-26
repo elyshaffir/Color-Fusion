@@ -4,23 +4,23 @@ public class ColorsEnvironment : MonoBehaviour
 {
     public int width = 256;
     public int height = 256;
-    public int numberOfGradients = 1;
+    public uint numberOfGradients = 1;
 
     public float yOffset = 0;
     public float textureScale = 1f;
     public Texture2D texture; // todo access from player and enemies
 
-    private float redSeed;
-    private float greenSeed;
-    private float blueSeed;
+    private float _redSeed;
+    private float _greenSeed;
+    private float _blueSeed;
 
     void Start()
     {
         texture = new Texture2D(width, height);
 
-        redSeed = Random.Range(0f, 1f);
-        greenSeed = Random.Range(0f, 1f);
-        blueSeed = Random.Range(0f, 1f);
+        _redSeed = Random.Range(0f, 1f);
+        _greenSeed = Random.Range(0f, 1f);
+        _blueSeed = Random.Range(0f, 1f);
 
         Renderer renderer = GetComponent<Renderer>();
         renderer.material.mainTexture = texture;
@@ -33,7 +33,7 @@ public class ColorsEnvironment : MonoBehaviour
 
     private float ColorNoise(float xCoord, float yCoord)
     {
-        float sample = Mathf.PerlinNoise(xCoord + redSeed, yCoord + redSeed);
+        float sample = Mathf.PerlinNoise(xCoord + _redSeed, yCoord + _redSeed);
         float roundTo = 1.0f / (float)numberOfGradients;
         return Mathf.Round(sample / roundTo) * roundTo;
     }
@@ -46,9 +46,9 @@ public class ColorsEnvironment : MonoBehaviour
             {
                 float xCoord = (float)x / width * textureScale;
                 float yCoord = (float)y / height * textureScale + yOffset;
-                float redSample = ColorNoise(xCoord + redSeed, yCoord + redSeed);
-                float greenSample = ColorNoise(xCoord + greenSeed, yCoord + greenSeed);
-                float blueSample = ColorNoise(xCoord + blueSeed, yCoord + blueSeed);
+                float redSample = ColorNoise(xCoord + _redSeed, yCoord + _redSeed);
+                float greenSample = ColorNoise(xCoord + _greenSeed, yCoord + _greenSeed);
+                float blueSample = ColorNoise(xCoord + _blueSeed, yCoord + _blueSeed);
                 Color color = new Color(redSample, greenSample, blueSample);
                 texture.SetPixel(x, y, color);
             }
