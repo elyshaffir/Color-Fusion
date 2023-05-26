@@ -18,7 +18,7 @@ public class Gun : MonoBehaviour
 
         transform.localRotation = Quaternion.Euler(0, 0, angle);
 
-        if (Input.GetMouseButtonDown(0) && _fireTimer <= 0f)
+        if (Input.GetMouseButton(0) && _fireTimer <= 0f)
         {
             Shoot();
             _fireTimer = _fireRate;
