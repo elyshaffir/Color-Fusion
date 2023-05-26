@@ -47,5 +47,11 @@ public class MainGuy : MonoBehaviour
         {
             _isJumping = true;
         }
+
+        if (other.gameObject.CompareTag("Enemy"))
+        {
+            
+        }
     }
+
 }

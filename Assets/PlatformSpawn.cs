@@ -6,10 +6,12 @@ public class PlatformSpawn : MonoBehaviour
     public float platformDistance = 4; // todo this should be calculated from global constants along with other hard coded values
 
     private float checkCamera; // todo better name
-    
+    private float _camSize;
+
     void Start()
     {
         checkCamera = Camera.main.transform.position.y + platformDistance;
+        _camSize = Camera.main.orthographicSize;
     }
 
     void FixedUpdate()
@@ -17,7 +19,7 @@ public class PlatformSpawn : MonoBehaviour
         if (Camera.main.transform.position.y > checkCamera)
         {
             Instantiate(platform,
-                new Vector3(Random.Range(-5,5), checkCamera, 0), // todo hard coded
+                new Vector3(Random.Range(-_camSize, _camSize), checkCamera, 0), // todo hard coded
                 transform.rotation);
             checkCamera += platformDistance;
         }
