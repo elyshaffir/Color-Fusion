@@ -6,11 +6,6 @@ public class MainGuy : MonoBehaviour
     public float speed = 5;
     public float viewHeight; // todo can this be calculated
 
-    // Gun variables
-    [SerializeField] private GameObject _bulletPrefab;
-    [Range(0.1f, 1f)]
-    [SerializeField] private float _fireRate = 0.5f;
-
     private bool _isJumping;
     private Rigidbody2D _myRidigbody;
 
