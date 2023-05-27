@@ -4,6 +4,7 @@ public class PlatformSpawner : MonoBehaviour
 {
     [SerializeField] private Transform _mainGuy;
     [SerializeField] private GameObject _platformPrefab;
+    [SerializeField] private GameObject _enemyPrefab;
     private Vector3 lastBlockInPreviousBulkPosition;
     private float _cameraLeftEdge;
     private float _cameraRightEdge;
@@ -32,6 +33,8 @@ public class PlatformSpawner : MonoBehaviour
     private Vector3 CreatePlatformBulk(Vector3 lastBlockInPreviousBulkPosition)
     {
         Vector3 previousBlockPosition = new Vector3();
+        int platformsWithoutEnemy = 0;
+        int platformsUntilEnemy = Random.Range(3,5);
         for (int i = 0; i < PLATFORM_CREATION_AMOUNT; i++)
         {
             float platfromSize = Random.Range(4f, 8f);
@@ -42,6 +45,23 @@ public class PlatformSpawner : MonoBehaviour
 
             GameObject platform = Instantiate(_platformPrefab, platformPosition, Quaternion.identity);
             platform.transform.localScale = new Vector3(platfromSize, (float)PLATFORM_HEIGHT, transform.localScale.z);
+
+            if (platformsWithoutEnemy >= platformsUntilEnemy)
+            {
+                //create enemy on platform
+                Vector3 enemyStartPosition = new Vector3(platformPosition.x, platformPosition.y + 1, transform.position.z);
+                float platformRightSidePositionX = platfromPositionX + platfromSize / 2;
+                float platformLeftSidePositionX = platfromPositionX - platfromSize / 2;
+                GameObject enemy = Instantiate(_enemyPrefab, platformPosition, Quaternion.identity);
+                enemy.GetComponent<Enemy>().Init(enemyStartPosition, platformLeftSidePositionX, platformRightSidePositionX);
+
+                platformsWithoutEnemy = 0;
+                platformsUntilEnemy = Random.Range(3, 5);
+            } 
+            else
+            {
+                platformsWithoutEnemy++;
+            } 
 
             previousBlockPosition = platform.transform.localPosition;
         }

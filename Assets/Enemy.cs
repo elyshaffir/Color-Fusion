@@ -13,12 +13,17 @@ public class Enemy : MonoBehaviour
     [SerializeField] private GameObject _leftoverPrefab;
     private Leftover _leftover;
 
-    public void Init()
+    private float _leftPositionX;
+    private float _rightPositionX;
+
+
+    public void Init(Vector3 startPosition, float leftPositionX, float rightPositionX)
     {
-        
+        transform.position = startPosition;
+        _leftPositionX = leftPositionX;
+        _rightPositionX = rightPositionX;
     }
 
-    // Start is called before the first frame update
     void Start()
     {
         _sprite = GetComponent<SpriteRenderer>();
@@ -80,18 +85,14 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
     void FixedUpdate()
     {
-        // change diraction
-        if (_checkRange > range)
+        if (transform.position.x <= _leftPositionX + 0.2f || transform.position.x >= _rightPositionX - 0.2f)
         {
             _speed *= -1;
-            _checkRange = 0;
         }
-
+        
         transform.position += new Vector3(_speed, 0, 0);
-        _checkRange += Mathf.Abs(_speed);
     }
 
     private void OnCollisionEnter2D(Collision2D other)
