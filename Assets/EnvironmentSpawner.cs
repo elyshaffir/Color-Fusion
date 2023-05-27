@@ -6,7 +6,7 @@ public class EnvironmentSpawner : MonoBehaviour
     public GameObject environmentPrefab;
     public List<GameObject> environments;
 
-    public int width = 256;
+    public int width = 256; // todo this can be increased a lot
     public int height = 256;
     public uint numberOfGradients = 1; // todo remove
     public float textureScale = 1f;
@@ -31,11 +31,19 @@ public class EnvironmentSpawner : MonoBehaviour
             SpawnEnvironment();
             nextYSpawn += _spawnYInterval;
         }
+        for (int i = environments.Count - 1; i >= 0; i--)
+        {
+            GameObject environmentToRemove = environments[i];
+            if (LogicScript.isOutOfScreen(environmentToRemove.transform.position.y + environmentToRemove.transform.localScale.y))
+            {
+                environments.RemoveAt(i);
+                Destroy(environmentToRemove);
+            }
+        }
     }
 
     void SpawnEnvironment()
     {
-        // todo remove environment after out of view after
         GameObject newEnvironment = Instantiate(environmentPrefab,
             new Vector3(Camera.main.transform.position.x,
                         nextYSpawn,
