@@ -7,7 +7,7 @@ public class MainGuy : MonoBehaviour
     public float speed = 5;
     public float viewHeight; // todo can this be calculated
 
-    public ColorsEnvironment environment;
+    public EnvironmentSpawner environmentSpawner;
 
     private bool _isJumping;
     private Rigidbody2D _myRidigbody;
@@ -34,34 +34,44 @@ public class MainGuy : MonoBehaviour
             Debug.Log("out"); // todo handle death
         }
 
-        Vector2 textureCoords = new Vector2(
-            transform.position.x - environment.transform.position.x + (environment.transform.localScale.x / 2),
-            transform.position.y - environment.transform.position.y + (environment.transform.localScale.y) / 2);
-        
-        textureCoords *= new Vector2(
-            environment.width / environment.transform.localScale.x,
-            environment.height / environment.transform.localScale.y);
 
-        // todo make this the center of the character
-        Color affectingColor = environment.texture.GetPixel(
-            (int)textureCoords.x,
-            (int)textureCoords.y);
-        ColorEffect effect;
-        if (ColorEffectMapping.TryGetValue(affectingColor, out effect))
+        foreach (GameObject environmentObject in environmentSpawner.environments)
         {
-            switch (effect)
+            if (environmentObject.transform.position.y < transform.position.y &&
+                environmentObject.transform.position.y + environmentObject.transform.localScale.y
+                 > transform.position.y)
             {
-                case ColorEffect.Heal:
-                    Debug.Log("Healing");
-                    break;
-                default:
-                    throw new NotImplementedException("ColorEffect not implemented!");
+                ColorsEnvironment environment = environmentObject.GetComponent<ColorsEnvironment>();
+                Vector2 textureCoords = new Vector2(
+                    transform.position.x - environment.transform.position.x + (environment.transform.localScale.x / 2),
+                    transform.position.y - environment.transform.position.y + (environment.transform.localScale.y) / 2);
+
+                textureCoords *= new Vector2(
+                    environment.width / environment.transform.localScale.x,
+                    environment.height / environment.transform.localScale.y);
+
+                // todo make this the center of the character
+                Color affectingColor = environment.texture.GetPixel(
+                    (int)textureCoords.x,
+                    (int)textureCoords.y);
+                ColorEffect effect;
+                if (ColorEffectMapping.TryGetValue(affectingColor, out effect))
+                {
+                    switch (effect)
+                    {
+                        case ColorEffect.Heal:
+                            Debug.Log("Healing");
+                            break;
+                        default:
+                            throw new NotImplementedException("ColorEffect not implemented!");
+                    }
+                }
+                else
+                {
+                    // todo throw exception or something, in production this should not happen!
+                    // this needs to be thoroughly tested before publishing.
+                }
             }
-        }
-        else
-        {
-            // todo throw exception or something, in production this should not happen!
-            // this needs to be thoroughly tested before publishing.
         }
     }
 

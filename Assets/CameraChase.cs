@@ -16,9 +16,5 @@ public class CameraChase : MonoBehaviour
         transform.position = new Vector3(transform.position.x,
             transform.position.y + _currentSpeed,
             transform.position.z);
-
-        // todo why does /10 fixes speed of environment?
-        // maybe the scale of the quad?
-        environment.yOffset += _currentSpeed / 10.0f;
     }
 }
