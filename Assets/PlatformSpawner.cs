@@ -20,9 +20,12 @@ public class PlatformSpawner : MonoBehaviour
 
     private void Update()
     {
-        if (lastBlockInPreviousBulkPosition.y - _mainGuy.transform.position.y <= 20)
+        if (LogicScript.isGameActive)
         {
-            lastBlockInPreviousBulkPosition = CreatePlatformBulk(lastBlockInPreviousBulkPosition);
+            if (lastBlockInPreviousBulkPosition.y - _mainGuy.transform.position.y <= 20)
+            {
+                lastBlockInPreviousBulkPosition = CreatePlatformBulk(lastBlockInPreviousBulkPosition);
+            }
         }
     }
 

@@ -136,5 +136,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 251a5fff20299f04d868fbde76835f52, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _color: 0
   _speed: 0.05
   _range: 2
+  _leftoverPrefab: {fileID: 4772194705238704101, guid: 588e36cbf682bc64b861f89e2201bb45, type: 3}

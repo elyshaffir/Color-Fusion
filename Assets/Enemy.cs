@@ -10,21 +10,30 @@ public class Enemy : MonoBehaviour
     // 3 = green
     // 4 = blue
     // 5 = purple
-    public int _color = 0;
 
     public float _speed = 0.02f;
     public float _range;
 
     private float _checkRange = 0;
     private bool _isDead = false;
+    private int _color;
+    private SpriteRenderer _sprite;
+    [SerializeField] private GameObject _leftoverPrefab;
+    private Leftover _leftover;
 
     // Start is called before the first frame update
     void Start()
     {
+        _sprite = GetComponent<SpriteRenderer>();
+
         if (Random.value >= 0.5)
         {
             _speed *= -1;
         }
+
+        _color = Random.Range(0, 3);
+        _sprite.color = LogicScript.returnColor(_color * 2);
+
     }
 
     void Update()
@@ -32,6 +41,18 @@ public class Enemy : MonoBehaviour
         // destroy when hit by a bullet ot out of view
         if (_isDead || LogicScript.isOutOfScreen(transform.position.y))
         {
+            // when shot
+            if (_isDead)
+            {
+                // create a splash and find its script
+                GameObject leftover = Instantiate(_leftoverPrefab, transform.position, Quaternion.identity);
+                _leftover = leftover.GetComponent<Leftover>();
+
+                // find what color should the splash be 
+                _leftover.color = _color * 2;
+                leftover.transform.localScale = new Vector3(3, 3, transform.localScale.z);
+            }
+
             Destroy(gameObject);
         }
     }
@@ -50,7 +71,7 @@ public class Enemy : MonoBehaviour
         _checkRange += Mathf.Abs(_speed);
     }
 
-    private void OnCollisionExit2D(Collision2D other)
+    private void OnCollisionEnter2D(Collision2D other)
     {
         if (other.gameObject.CompareTag("Bullet"))
         {
