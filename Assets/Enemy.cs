@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    public float speed = 0.02f;
+    public float _speed = 0.02f;
     public float range;
     public EnvironmentSpawner environmentSpawner;
 
@@ -13,6 +13,11 @@ public class Enemy : MonoBehaviour
     [SerializeField] private GameObject _leftoverPrefab;
     private Leftover _leftover;
 
+    public void Init()
+    {
+        
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -20,7 +25,7 @@ public class Enemy : MonoBehaviour
 
         if (Random.value >= 0.5)
         {
-            speed *= -1;
+            _speed *= -1;
         }
 
         _colorIndex = Random.Range(0, 3) * 2;
@@ -81,12 +86,12 @@ public class Enemy : MonoBehaviour
         // change diraction
         if (_checkRange > range)
         {
-            speed *= -1;
+            _speed *= -1;
             _checkRange = 0;
         }
 
-        transform.position += new Vector3(speed, 0, 0);
-        _checkRange += Mathf.Abs(speed);
+        transform.position += new Vector3(_speed, 0, 0);
+        _checkRange += Mathf.Abs(_speed);
     }
 
     private void OnCollisionEnter2D(Collision2D other)
