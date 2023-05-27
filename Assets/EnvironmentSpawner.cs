@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class EnvironmentSpawner : MonoBehaviour
 {
-    public MainGuy player;
     public GameObject environmentPrefab;
     public List<GameObject> environments;
 
@@ -44,7 +43,7 @@ public class EnvironmentSpawner : MonoBehaviour
         GameObject newEnvironment = Instantiate(environmentPrefab,
             new Vector3(Camera.main.transform.position.x,
                         nextYSpawn,
-                        player.transform.position.z),
+                        0),
             transform.rotation);
         Texture2D generatedTexture = GenerateTexture();
         newEnvironment.GetComponent<ColorsEnvironment>().texture = generatedTexture;

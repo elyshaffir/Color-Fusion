@@ -6,16 +6,19 @@ public class MainGuy : MonoBehaviour
     public float jumpSpeed = 600;
     public float speed = 5;
     public float viewHeight; // todo can this be calculated
+    public LogicScript logic;
 
     public EnvironmentSpawner environmentSpawner;
 
     private bool _isJumping;
+    private bool _isDead = false;
     private Rigidbody2D _myRidigbody;
 
     void Start()
     {
         _myRidigbody = GetComponent<Rigidbody2D>();
         viewHeight = Camera.main.orthographicSize;
+        logic = GameObject.FindGameObjectWithTag("Logic").GetComponent<LogicScript>();
     }
 
     void Update()
@@ -28,10 +31,12 @@ public class MainGuy : MonoBehaviour
             _myRidigbody.AddForce(new Vector2(_myRidigbody.velocity.x, jumpSpeed));
         }
 
-        // check if dead
-        if (_myRidigbody.transform.position.y + viewHeight < Camera.main.transform.position.y)
+                // check if dead or our of view
+        if (_isDead || LogicScript.isOutOfScreen(transform.position.y))
         {
-            Debug.Log("out"); // todo handle death
+            logic.gameOver();
+            Destroy(gameObject);
+            Debug.Log("Game Over");
         }
 
 
@@ -80,6 +85,12 @@ public class MainGuy : MonoBehaviour
         if (other.gameObject.CompareTag("Ground"))
         {
             _isJumping = false;
+        }
+
+        // stop game when killed by an enemy
+        if (other.gameObject.CompareTag("Enemy"))
+        {
+            _isDead = true;
         }
     }
 
