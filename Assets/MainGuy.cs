@@ -14,11 +14,14 @@ public class MainGuy : MonoBehaviour
     private bool _isDead = false;
     private Rigidbody2D _myRidigbody;
 
+    private Vector2 _screenBounds;
+
     void Start()
     {
         _myRidigbody = GetComponent<Rigidbody2D>();
         viewHeight = Camera.main.orthographicSize;
         logic = GameObject.FindGameObjectWithTag("Logic").GetComponent<LogicScript>();
+        _screenBounds = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, Camera.main.transform.position.z));
     }
 
     void Update()
@@ -78,6 +81,13 @@ public class MainGuy : MonoBehaviour
                 }
             }
         }
+    }
+
+    private void LateUpdate()
+    {
+        Vector3 viewPos = transform.position;
+        viewPos.x = Mathf.Clamp(viewPos.x, _screenBounds.x * (-1), _screenBounds.x);
+        transform.position = viewPos;
     }
 
     private void OnCollisionEnter2D(Collision2D other)
