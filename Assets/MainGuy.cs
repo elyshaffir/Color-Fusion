@@ -6,16 +6,19 @@ public class MainGuy : MonoBehaviour
     public float jumpSpeed = 600;
     public float speed = 5;
     public float viewHeight; // todo can this be calculated
+    public LogicScript logic;
 
     public ColorsEnvironment environment;
 
     private bool _isJumping;
+    private bool _isDead = false;
     private Rigidbody2D _myRidigbody;
 
     void Start()
     {
         _myRidigbody = GetComponent<Rigidbody2D>();
         viewHeight = Camera.main.orthographicSize;
+        logic = GameObject.FindGameObjectWithTag("Logic").GetComponent<LogicScript>();
     }
 
     void Update()
@@ -26,12 +29,6 @@ public class MainGuy : MonoBehaviour
         if (Input.GetButtonDown("Jump") && !_isJumping)
         {
             _myRidigbody.AddForce(new Vector2(_myRidigbody.velocity.x, jumpSpeed));
-        }
-
-        // check if dead
-        if (_myRidigbody.transform.position.y + viewHeight < Camera.main.transform.position.y)
-        {
-            Debug.Log("out"); // todo handle death
         }
 
         Vector2 textureCoords = new Vector2(
@@ -63,6 +60,14 @@ public class MainGuy : MonoBehaviour
             // todo throw exception or something, in production this should not happen!
             // this needs to be thoroughly tested before publishing.
         }
+
+        // check if dead or our of view
+        if (_isDead || LogicScript.isOutOfScreen(transform.position.y))
+        {
+            logic.gameOver();
+            Destroy(gameObject);
+            Debug.Log("Game Over");
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D other)
@@ -70,6 +75,12 @@ public class MainGuy : MonoBehaviour
         if (other.gameObject.CompareTag("Ground"))
         {
             _isJumping = false;
+        }
+
+        // stop game when killed by an enemy
+        if (other.gameObject.CompareTag("Enemy"))
+        {
+            _isDead = true;
         }
     }
 
@@ -79,11 +90,5 @@ public class MainGuy : MonoBehaviour
         {
             _isJumping = true;
         }
-
-        if (other.gameObject.CompareTag("Enemy"))
-        {
-
-        }
     }
-
 }
