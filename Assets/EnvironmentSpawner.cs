@@ -4,17 +4,32 @@ using UnityEngine;
 public class EnvironmentSpawner : MonoBehaviour
 {
     public GameObject environmentPrefab;
-    public List<GameObject> environments;
 
     public int width = 256; // todo this can be increased a lot
     public int height = 256;
     public uint numberOfGradients = 1; // todo remove
     public float textureScale = 1f;
 
-    private float _seed;
+    private List<GameObject> environments = new List<GameObject>();
 
+    private float _seed;
     private float nextYSpawn;
     private float _spawnYInterval;
+
+    public bool TryGetEnvironmentByLocation(Vector3 location, out ColorsEnvironment outEnvironment)
+    {
+        foreach (GameObject environment in environments)
+        {
+            if (environment.transform.position.y - (environment.transform.localScale.y / 2) < location.y &&
+                environment.transform.position.y + (environment.transform.localScale.y / 2) > location.y)
+            {
+                outEnvironment = environment.GetComponent<ColorsEnvironment>();
+                return true;
+            }
+        }
+        outEnvironment = new ColorsEnvironment();
+        return false;
+    }
 
     void Start()
     {
