@@ -6,5 +6,5 @@ public class ColorsEnvironment : MonoBehaviour
 {
     public int width;
     public int height;
-    public Texture2D texture; // todo access from player and enemies
+    public Texture2D texture;
 }
