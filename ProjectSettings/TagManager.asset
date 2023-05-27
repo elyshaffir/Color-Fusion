@@ -8,6 +8,7 @@ TagManager:
   - Bullet
   - Enemy
   - Logic
+  - Leftover
   layers:
   - Default
   - TransparentFX
