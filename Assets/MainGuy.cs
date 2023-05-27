@@ -5,18 +5,26 @@ public class MainGuy : MonoBehaviour
 {
     public float jumpSpeed = 600;
     public float speed = 5;
+    public float speedEffect = 1;
+    public float bounceBoost = 8;
     public float viewHeight; // todo can this be calculated
     public LogicScript logic;
     public EnvironmentSpawner environmentSpawner;
+    public float effectTime = 5;
 
     private bool _isJumping;
     private bool _isDead = false;
     private Rigidbody2D _myRidigbody;
+    private int _invertControl;
+    private float _confuseTimer = 0;
+    private float _speedBoostTimer = 0;
+    private float _bounceTimer = 0;
 
     private Vector2 _screenBounds;
 
     void Start()
     {
+        _invertControl = 1;
         _myRidigbody = GetComponent<Rigidbody2D>();
         viewHeight = Camera.main.orthographicSize;
         logic = GameObject.FindGameObjectWithTag("Logic").GetComponent<LogicScript>();
@@ -25,12 +33,19 @@ public class MainGuy : MonoBehaviour
 
     void Update()
     {
-        float move = Input.GetAxis("Horizontal");
-        _myRidigbody.velocity = new Vector2(speed * move, _myRidigbody.velocity.y);
+        if (_bounceTimer > 0)
+        {
+            _bounceTimer -= Time.deltaTime;
+        }
+        else
+        {
+            float move = Input.GetAxis("Horizontal") * _invertControl * speedEffect;
+            _myRidigbody.velocity = new Vector2(speed * move, _myRidigbody.velocity.y);
+        }
 
         if (Input.GetButtonDown("Jump") && !_isJumping)
         {
-            _myRidigbody.AddForce(new Vector2(_myRidigbody.velocity.x, jumpSpeed));
+            _myRidigbody.AddForce(new Vector2(_myRidigbody.velocity.x, jumpSpeed * speedEffect));
         }
 
         // check if dead or our of view
@@ -66,6 +81,26 @@ public class MainGuy : MonoBehaviour
         {
             Debug.Log("This shouldn't happen (environment to location main guy)"); // todo proper handling
         }
+
+        // effect timers
+        if (_confuseTimer > 0)
+        {
+            _confuseTimer -= Time.deltaTime;
+        }
+        else
+        {
+            _invertControl = 1;
+        }
+
+
+        if (_speedBoostTimer > 0)
+        {
+            _speedBoostTimer -= Time.deltaTime;
+        }
+        else
+        {
+            speedEffect = 1;
+        }
     }
 
     private void LateUpdate()
@@ -100,5 +135,29 @@ public class MainGuy : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other)
     {
         Debug.Log("Effect");
+        if (other.gameObject.CompareTag("Leftover"))
+        {
+            Leftover leftover = other.gameObject.GetComponent<Leftover>();
+            switch (leftover.color)
+            {
+                case 1:
+                    float xVelocity = transform.position.x - leftover.transform.position.x;
+                    float yVelocity = transform.position.y - leftover.transform.position.y;
+                    _myRidigbody.velocity = new Vector2(xVelocity * bounceBoost, yVelocity * bounceBoost);
+                    _invertControl = 0;
+                    _bounceTimer = 0.5f;
+                    break;
+
+                case 3:
+                    speedEffect = 3;
+                    _speedBoostTimer = effectTime;
+                    break;
+
+                case 5:
+                    _invertControl = -1;
+                    _confuseTimer = effectTime;
+                    break;
+            }
+        }
     }
 }
