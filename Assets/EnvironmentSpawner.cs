@@ -7,7 +7,6 @@ public class EnvironmentSpawner : MonoBehaviour
 
     public int width = 256; // todo this can be increased a lot
     public int height = 256;
-    public uint numberOfGradients = 1; // todo remove
     public float textureScale = 1f;
 
     private List<GameObject> environments = new List<GameObject>();
@@ -15,6 +14,7 @@ public class EnvironmentSpawner : MonoBehaviour
     private float _seed;
     private float nextYSpawn;
     private float _spawnYInterval;
+    private Vector2 _environmentScale;
 
     public bool TryGetEnvironmentByLocation(Vector3 location, out ColorsEnvironment outEnvironment)
     {
@@ -36,9 +36,10 @@ public class EnvironmentSpawner : MonoBehaviour
         _seed = Random.Range(0f, 1f);
         nextYSpawn = Camera.main.transform.position.y;
         _spawnYInterval = environmentPrefab.transform.localScale.y;
+        _environmentScale = 2 *
+            Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, Camera.main.transform.position.z));
     }
 
-    // Update is called once per frame
     void FixedUpdate()
     {
         if (Camera.main.transform.position.y >= nextYSpawn - _spawnYInterval)
@@ -69,6 +70,10 @@ public class EnvironmentSpawner : MonoBehaviour
         newEnvironment.GetComponent<Renderer>().material.mainTexture = generatedTexture;
         newEnvironment.GetComponent<ColorsEnvironment>().width = width;
         newEnvironment.GetComponent<ColorsEnvironment>().height = height;
+
+        newEnvironment.transform.localScale =
+            new Vector3(_environmentScale.x, _environmentScale.y, newEnvironment.transform.localScale.z);
+        Debug.Log(newEnvironment.transform.localScale);
         environments.Add(newEnvironment);
     }
 
