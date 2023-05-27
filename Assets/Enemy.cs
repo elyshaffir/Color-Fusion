@@ -4,6 +4,14 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
+    // 0 = red
+    // 1 = orange
+    // 2 = yellow
+    // 3 = green
+    // 4 = blue
+    // 5 = purple
+    public int _color = 0;
+
     public float _speed = 0.02f;
     public float _range;
 
