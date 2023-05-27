@@ -91,7 +91,7 @@ public class Enemy : MonoBehaviour
         {
             _speed *= -1;
         }
-        
+
         transform.position += new Vector3(_speed, 0, 0);
     }
 

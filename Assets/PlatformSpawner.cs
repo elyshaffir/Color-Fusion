@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class PlatformSpawner : MonoBehaviour
 {
+    [SerializeField] private EnvironmentSpawner environmentSpawner;
     [SerializeField] private Transform _mainGuy;
     [SerializeField] private GameObject _platformPrefab;
     [SerializeField] private GameObject _enemyPrefab;
@@ -34,7 +35,7 @@ public class PlatformSpawner : MonoBehaviour
     {
         Vector3 previousBlockPosition = new Vector3();
         int platformsWithoutEnemy = 0;
-        int platformsUntilEnemy = Random.Range(3,5);
+        int platformsUntilEnemy = Random.Range(3, 5);
         for (int i = 0; i < PLATFORM_CREATION_AMOUNT; i++)
         {
             float platfromSize = Random.Range(4f, 8f);
@@ -54,14 +55,15 @@ public class PlatformSpawner : MonoBehaviour
                 float platformLeftSidePositionX = platfromPositionX - platfromSize / 2;
                 GameObject enemy = Instantiate(_enemyPrefab, platformPosition, Quaternion.identity);
                 enemy.GetComponent<Enemy>().Init(enemyStartPosition, platformLeftSidePositionX, platformRightSidePositionX);
+                enemy.GetComponent<Enemy>().environmentSpawner = environmentSpawner;
 
                 platformsWithoutEnemy = 0;
                 platformsUntilEnemy = Random.Range(3, 5);
-            } 
+            }
             else
             {
                 platformsWithoutEnemy++;
-            } 
+            }
 
             previousBlockPosition = platform.transform.localPosition;
         }
