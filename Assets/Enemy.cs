@@ -1,22 +1,14 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    // 0 = red
-    // 1 = orange
-    // 2 = yellow
-    // 3 = green
-    // 4 = blue
-    // 5 = purple
-
-    public float _speed = 0.02f;
-    public float _range;
+    public float speed = 0.02f;
+    public float range;
+    public EnvironmentSpawner environmentSpawner;
 
     private float _checkRange = 0;
     private bool _isDead = false;
-    private int _color;
+    private int _colorIndex;
     private SpriteRenderer _sprite;
     [SerializeField] private GameObject _leftoverPrefab;
     private Leftover _leftover;
@@ -28,11 +20,11 @@ public class Enemy : MonoBehaviour
 
         if (Random.value >= 0.5)
         {
-            _speed *= -1;
+            speed *= -1;
         }
 
-        _color = Random.Range(0, 3);
-        _sprite.color = LogicScript.returnColor(_color * 2);
+        _colorIndex = Random.Range(0, 3) * 2;
+        _sprite.color = Colors.colors[_colorIndex];
 
     }
 
@@ -48,8 +40,34 @@ public class Enemy : MonoBehaviour
                 GameObject leftover = Instantiate(_leftoverPrefab, transform.position, Quaternion.identity);
                 _leftover = leftover.GetComponent<Leftover>();
 
+                ColorsEnvironment environment;
+                if (environmentSpawner.TryGetEnvironmentByLocation(transform.position, out environment))
+                {
+                    Color touchingColor = environment.GetColorInLocation(transform.position);
+                    int touchingColorIndex;
+                    if (Colors.TryGetIndexOfColor(touchingColor, out touchingColorIndex))
+                    {
+                        if (_colorIndex == touchingColorIndex)
+                        {
+                            _leftover.color = _colorIndex;
+                        }
+                        else
+                        {
+                            // todo convert to color blending with colors, not indices
+                            _leftover.color = (int)((_colorIndex + touchingColorIndex) / 2 + (Mathf.Abs(_colorIndex - touchingColorIndex) - 2) * 1.5);
+                        }
+                    }
+                    else
+                    {
+                        Debug.Log("This shouldn't happen (color to index enemy)"); // todo proper handling
+                    }
+                }
+                else
+                {
+                    Debug.Log("This shouldn't happen (location to environment enemy)"); // todo proper handling
+                }
+
                 // find what color should the splash be 
-                _leftover.color = _color * 2;
                 leftover.transform.localScale = new Vector3(3, 3, transform.localScale.z);
             }
 
@@ -61,14 +79,14 @@ public class Enemy : MonoBehaviour
     void FixedUpdate()
     {
         // change diraction
-        if (_checkRange > _range)
+        if (_checkRange > range)
         {
-            _speed *= -1;
+            speed *= -1;
             _checkRange = 0;
         }
 
-        transform.position += new Vector3(_speed, 0, 0);
-        _checkRange += Mathf.Abs(_speed);
+        transform.position += new Vector3(speed, 0, 0);
+        _checkRange += Mathf.Abs(speed);
     }
 
     private void OnCollisionEnter2D(Collision2D other)
