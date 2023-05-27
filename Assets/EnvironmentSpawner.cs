@@ -6,23 +6,19 @@ public class EnvironmentSpawner : MonoBehaviour
     public GameObject environmentPrefab;
     public List<GameObject> environments;
 
-    public int width = 256;
+    public int width = 256; // todo this can be increased a lot
     public int height = 256;
-    public uint numberOfGradients = 1;
+    public uint numberOfGradients = 1; // todo remove
     public float textureScale = 1f;
 
-    private float _redSeed;
-    private float _yellowSeed;
-    private float _blueSeed;
+    private float _seed;
 
     private float nextYSpawn;
     private float _spawnYInterval;
 
     void Start()
     {
-        _redSeed = Random.Range(0f, 1f);
-        _yellowSeed = Random.Range(0f, 1f);
-        _blueSeed = Random.Range(0f, 1f);
+        _seed = Random.Range(0f, 1f);
         nextYSpawn = Camera.main.transform.position.y;
         _spawnYInterval = environmentPrefab.transform.localScale.y;
     }
@@ -35,11 +31,19 @@ public class EnvironmentSpawner : MonoBehaviour
             SpawnEnvironment();
             nextYSpawn += _spawnYInterval;
         }
+        for (int i = environments.Count - 1; i >= 0; i--)
+        {
+            GameObject environmentToRemove = environments[i];
+            if (LogicScript.isOutOfScreen(environmentToRemove.transform.position.y + environmentToRemove.transform.localScale.y))
+            {
+                environments.RemoveAt(i);
+                Destroy(environmentToRemove);
+            }
+        }
     }
 
     void SpawnEnvironment()
     {
-        // todo remove environment after out of view after
         GameObject newEnvironment = Instantiate(environmentPrefab,
             new Vector3(Camera.main.transform.position.x,
                         nextYSpawn,
@@ -53,13 +57,6 @@ public class EnvironmentSpawner : MonoBehaviour
         environments.Add(newEnvironment);
     }
 
-    private float ColorNoise(float xCoord, float yCoord)
-    {
-        float sample = Mathf.PerlinNoise(xCoord, yCoord);
-        float roundTo = 1.0f / (float)numberOfGradients;
-        return Mathf.Round(sample / roundTo) * roundTo;
-    }
-
     private Texture2D GenerateTexture()
     {
         Texture2D texture = new Texture2D(width, height);
@@ -69,10 +66,20 @@ public class EnvironmentSpawner : MonoBehaviour
             {
                 float xCoord = (float)x / width * textureScale;
                 float yCoord = (float)y / height * textureScale + (nextYSpawn / 10.0f); // todo hard coded
-                float redSample = ColorNoise(xCoord + _redSeed, yCoord + _redSeed);
-                float yellowSample = ColorNoise(xCoord + _yellowSeed, yCoord + _yellowSeed);
-                float blueSample = ColorNoise(xCoord + _blueSeed, yCoord + _blueSeed);
-                Color color = new Color(redSample + yellowSample, yellowSample, blueSample);
+                float sample = Mathf.PerlinNoise(xCoord + _seed, yCoord + _seed);
+                Color color;
+                if (sample < 0.3f)
+                {
+                    color = Colors.red;
+                }
+                else if (sample < 0.6f)
+                {
+                    color = Colors.yellow;
+                }
+                else
+                {
+                    color = Colors.blue;
+                }
                 texture.SetPixel(x, y, color);
             }
         }

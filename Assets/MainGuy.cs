@@ -14,11 +14,14 @@ public class MainGuy : MonoBehaviour
     private bool _isDead = false;
     private Rigidbody2D _myRidigbody;
 
+    private Vector2 _screenBounds;
+
     void Start()
     {
         _myRidigbody = GetComponent<Rigidbody2D>();
         viewHeight = Camera.main.orthographicSize;
         logic = GameObject.FindGameObjectWithTag("Logic").GetComponent<LogicScript>();
+        _screenBounds = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, Camera.main.transform.position.z));
     }
 
     void Update()
@@ -31,7 +34,7 @@ public class MainGuy : MonoBehaviour
             _myRidigbody.AddForce(new Vector2(_myRidigbody.velocity.x, jumpSpeed));
         }
 
-                // check if dead or our of view
+        // check if dead or our of view
         if (_isDead || LogicScript.isOutOfScreen(transform.position.y))
         {
             logic.gameOver();
@@ -39,12 +42,10 @@ public class MainGuy : MonoBehaviour
             Debug.Log("Game Over");
         }
 
-
         foreach (GameObject environmentObject in environmentSpawner.environments)
         {
-            if (environmentObject.transform.position.y < transform.position.y &&
-                environmentObject.transform.position.y + environmentObject.transform.localScale.y
-                 > transform.position.y)
+            if (environmentObject.transform.position.y - (environmentObject.transform.localScale.y / 2) < transform.position.y &&
+                environmentObject.transform.position.y + (environmentObject.transform.localScale.y / 2) > transform.position.y)
             {
                 ColorsEnvironment environment = environmentObject.GetComponent<ColorsEnvironment>();
                 Vector2 textureCoords = new Vector2(
@@ -78,6 +79,13 @@ public class MainGuy : MonoBehaviour
                 }
             }
         }
+    }
+
+    private void LateUpdate()
+    {
+        Vector3 viewPos = transform.position;
+        viewPos.x = Mathf.Clamp(viewPos.x, _screenBounds.x * (-1), _screenBounds.x);
+        transform.position = viewPos;
     }
 
     private void OnCollisionEnter2D(Collision2D other)
