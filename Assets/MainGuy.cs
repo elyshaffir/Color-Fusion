@@ -34,7 +34,7 @@ public class MainGuy : MonoBehaviour
             _myRidigbody.AddForce(new Vector2(_myRidigbody.velocity.x, jumpSpeed));
         }
 
-                // check if dead or our of view
+        // check if dead or our of view
         if (_isDead || LogicScript.isOutOfScreen(transform.position.y))
         {
             logic.gameOver();
@@ -42,12 +42,10 @@ public class MainGuy : MonoBehaviour
             Debug.Log("Game Over");
         }
 
-
         foreach (GameObject environmentObject in environmentSpawner.environments)
         {
-            if (environmentObject.transform.position.y < transform.position.y &&
-                environmentObject.transform.position.y + environmentObject.transform.localScale.y
-                 > transform.position.y)
+            if (environmentObject.transform.position.y - (environmentObject.transform.localScale.y / 2) < transform.position.y &&
+                environmentObject.transform.position.y + (environmentObject.transform.localScale.y / 2) > transform.position.y)
             {
                 ColorsEnvironment environment = environmentObject.GetComponent<ColorsEnvironment>();
                 Vector2 textureCoords = new Vector2(
