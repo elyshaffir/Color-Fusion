@@ -68,7 +68,7 @@ public class Enemy : MonoBehaviour
                 }
 
                 // find what color should the splash be 
-                leftover.transform.localScale = new Vector3(3, 3, transform.localScale.z);
+                leftover.transform.localScale = new Vector3(3, 3, transform.localScale.z + 0.5f);
             }
 
             Destroy(gameObject);

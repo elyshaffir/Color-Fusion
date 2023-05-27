@@ -96,4 +96,9 @@ public class MainGuy : MonoBehaviour
             _isJumping = true;
         }
     }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        Debug.Log("Effect");
+    }
 }
