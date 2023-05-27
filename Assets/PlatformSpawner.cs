@@ -20,7 +20,7 @@ public class PlatformSpawner : MonoBehaviour
 
     private void Update()
     {
-        if (lastBlockInPreviousBulkPosition.y - _mainGuy.transform.position.y <= 20)
+        if (lastBlockInPreviousBulkPosition.y - _mainGuy.transform.position.y <= 20) // todo hard coded
         {
             lastBlockInPreviousBulkPosition = CreatePlatformBulk(lastBlockInPreviousBulkPosition);
         }
