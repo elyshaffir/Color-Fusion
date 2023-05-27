@@ -43,7 +43,7 @@ public class EnvironmentSpawner : MonoBehaviour
         GameObject newEnvironment = Instantiate(environmentPrefab,
             new Vector3(Camera.main.transform.position.x,
                         nextYSpawn,
-                        0),
+                        environmentPrefab.transform.position.z),
             transform.rotation);
         Texture2D generatedTexture = GenerateTexture();
         newEnvironment.GetComponent<ColorsEnvironment>().texture = generatedTexture;
