@@ -250,9 +250,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   jumpSpeed: 500
   speed: 7
+  speedEffect: 1
+  bounceBoost: 8
   viewHeight: 5
   logic: {fileID: 0}
   environmentSpawner: {fileID: 0}
+  effectTime: 5
+  jump: {fileID: 8300000, guid: 59c5b944889c4124ea9f4f7ad118e8e6, type: 3}
+  powerUp: {fileID: 8300000, guid: d17cac6f505007948a0ee3c2abac392d, type: 3}
 --- !u!1 &398658895520679616
 GameObject:
   m_ObjectHideFlags: 0

@@ -50,7 +50,7 @@ public class PlatformSpawner : MonoBehaviour
             if (platformsWithoutEnemy >= platformsUntilEnemy)
             {
                 //create enemy on platform
-                Vector3 enemyStartPosition = new Vector3(platformPosition.x, platformPosition.y + 1, transform.position.z);
+                Vector3 enemyStartPosition = new Vector3(platformPosition.x, platformPosition.y + 1, 0.5f);
                 float platformRightSidePositionX = platfromPositionX + platfromSize / 2;
                 float platformLeftSidePositionX = platfromPositionX - platfromSize / 2;
                 GameObject enemy = Instantiate(_enemyPrefab, platformPosition, Quaternion.identity);

@@ -7,9 +7,12 @@ public class LogicScript : MonoBehaviour
     public GameObject gameOverScreen;
     public static bool isGameActive;
 
+    private AudioSource _audioSource;
+
     private void Start()
     {
         isGameActive = true;
+        _audioSource = GetComponent<AudioSource>();
     }
 
     public void restartGame()
@@ -20,6 +23,7 @@ public class LogicScript : MonoBehaviour
     public void gameOver()
     {
         gameOverScreen.SetActive(true);
+        _audioSource.Play();
         isGameActive = false;
     }
 

@@ -12,6 +12,10 @@ public class MainGuy : MonoBehaviour
     public EnvironmentSpawner environmentSpawner;
     public float effectTime = 5;
 
+    // audio
+    public AudioClip jump;
+    public AudioClip powerUp;
+
     private bool _isJumping;
     private bool _isDead = false;
     private Rigidbody2D _myRidigbody;
@@ -19,6 +23,7 @@ public class MainGuy : MonoBehaviour
     private float _confuseTimer = 0;
     private float _speedBoostTimer = 0;
     private float _bounceTimer = 0;
+    private AudioSource _audioSource;
 
     private Vector2 _screenBounds;
 
@@ -29,6 +34,7 @@ public class MainGuy : MonoBehaviour
         viewHeight = Camera.main.orthographicSize;
         logic = GameObject.FindGameObjectWithTag("Logic").GetComponent<LogicScript>();
         _screenBounds = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, Camera.main.transform.position.z));
+        _audioSource = GetComponent<AudioSource>();
     }
 
     void Update()
@@ -46,6 +52,7 @@ public class MainGuy : MonoBehaviour
         if (Input.GetButtonDown("Jump") && !_isJumping)
         {
             _myRidigbody.AddForce(new Vector2(_myRidigbody.velocity.x, jumpSpeed * speedEffect));
+            PlayClip(jump);
         }
 
         // check if dead or our of view
@@ -141,6 +148,7 @@ public class MainGuy : MonoBehaviour
             switch (leftover.color)
             {
                 case 1:
+                    PlayPowerUp(_bounceTimer);
                     float xVelocity = transform.position.x - leftover.transform.position.x;
                     float yVelocity = transform.position.y - leftover.transform.position.y;
                     _myRidigbody.velocity = new Vector2(xVelocity * bounceBoost, yVelocity * bounceBoost);
@@ -149,15 +157,31 @@ public class MainGuy : MonoBehaviour
                     break;
 
                 case 3:
+                    PlayPowerUp(_speedBoostTimer);
                     speedEffect = 3;
                     _speedBoostTimer = effectTime;
                     break;
 
                 case 5:
+                    PlayPowerUp(_confuseTimer);
                     _invertControl = -1;
                     _confuseTimer = effectTime;
                     break;
             }
         }
+    }
+
+    private void PlayPowerUp(float timer)
+    {
+        if (timer <= 0)
+        {
+            PlayClip(powerUp);
+        }
+    }
+
+    private void PlayClip(AudioClip clip)
+    {
+        _audioSource.clip = clip;
+        _audioSource.Play();
     }
 }

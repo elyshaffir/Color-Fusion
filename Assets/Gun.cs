@@ -8,7 +8,12 @@ public class Gun : MonoBehaviour
     [Range(0.1f, 2f)]
     [SerializeField] private float _fireRate = 0.5f;
     private float _fireTimer;
+    private AudioSource _audioSource;
 
+    void Start()
+    {
+        _audioSource = GetComponent<AudioSource>();
+    }
 
     void Update()
     {
@@ -22,8 +27,10 @@ public class Gun : MonoBehaviour
         {
             Shoot();
             _fireTimer = _fireRate;
+            _audioSource.Play();
         }
-        else {
+        else
+        {
             _fireTimer -= Time.deltaTime;
         }
     }
